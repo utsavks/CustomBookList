@@ -194,7 +194,9 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
             filteredBooks = (ArrayList<Book>) results.values;
 
             //to show the no. of results
+            if(unfilteredBooks.size()!=filteredBooks.size())
             tvResults.setText("Found "+ filteredBooks.size()+" results");
+            else{tvResults.setText("Result");}
 
             notifyDataSetChanged();
 
