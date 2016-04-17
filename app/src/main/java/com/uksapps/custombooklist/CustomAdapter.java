@@ -3,6 +3,7 @@ package com.uksapps.custombooklist;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -61,6 +63,8 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
     public long getItemId(int position) {
         return filteredBooks.indexOf(getItem(position));
     }
+
+
 
    //To save some time
    static class ViewHolder {
@@ -135,7 +139,7 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
                         if (unfilteredBooks.get(i).getNames().toLowerCase().contains(word)) {
 
                             Book b = new Book(unfilteredBooks.get(i).getNames(), unfilteredBooks.get(i).getAuthor(), unfilteredBooks.get(i).getPublisher(),
-                                    unfilteredBooks.get(i).getImages());
+                                    unfilteredBooks.get(i).getImages(),unfilteredBooks.get(i).getUrl());
                             filtered.add(b);
 
                             //An attempt to highlight
@@ -155,7 +159,9 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
 
                     for (String word : words)
                         if (unfilteredBooks.get(i).getAuthor().toLowerCase().contains(word)) {
-                            Book b = new Book(unfilteredBooks.get(i).getNames(), unfilteredBooks.get(i).getAuthor(), unfilteredBooks.get(i).getPublisher(), unfilteredBooks.get(i).getImages());
+                            Book b = new Book(unfilteredBooks.get(i).getNames(), unfilteredBooks.get(i).getAuthor(),
+                                    unfilteredBooks.get(i).getPublisher(), unfilteredBooks.get(i).getImages(),
+                                    unfilteredBooks.get(i).getUrl());
                             filtered.add(b);
                             break;
                         }
@@ -164,7 +170,9 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
                 for (int i = 0; i < unfilteredBooks.size(); i++) {
                     for (String word : words)
                         if (unfilteredBooks.get(i).getPublisher().toLowerCase().contains(word)) {
-                            Book b = new Book(unfilteredBooks.get(i).getNames(), unfilteredBooks.get(i).getAuthor(), unfilteredBooks.get(i).getPublisher(), unfilteredBooks.get(i).getImages());
+                            Book b = new Book(unfilteredBooks.get(i).getNames(), unfilteredBooks.get(i).getAuthor(),
+                                    unfilteredBooks.get(i).getPublisher(), unfilteredBooks.get(i).getImages()
+                                    ,unfilteredBooks.get(i).getUrl());
                             filtered.add(b);
                             break;
                         }
@@ -188,10 +196,6 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
             //to show the no. of results
             tvResults.setText("Found "+ filteredBooks.size()+" results");
 
-
-
-
-
             notifyDataSetChanged();
 
             //Hiding the soft keyboard
@@ -206,7 +210,6 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
 
                 }
             });
-
         }
 
          //The function to make highlighting in the name field possible
