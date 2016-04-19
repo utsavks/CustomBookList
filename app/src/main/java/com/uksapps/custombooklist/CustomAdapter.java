@@ -3,17 +3,11 @@ package com.uksapps.custombooklist;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -32,10 +26,8 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
     ArrayList<Book> filteredBooks;
     CustomFilter searcher;
     ArrayList<Book> unfilteredBooks;
-    ViewHolder holder = new ViewHolder();
     TextView tvResults;
     ListView lv;
-
 
     //The constructor
     public CustomAdapter( Context ctx , ArrayList<Book> books, TextView tvResults,ListView l) {
@@ -66,8 +58,8 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
 
 
 
-   //To save some time
-   static class ViewHolder {
+    //To save some time
+    static class ViewHolder {
         TextView tvName;
         TextView tvAuth;
         TextView tvPub;
@@ -79,20 +71,24 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-
+        ViewHolder holder;
 
         if (convertView==null){
             LayoutInflater inflater = LayoutInflater.from(ctx);
             convertView = inflater.inflate(R.layout.custom_row,null);
+
+            holder = new ViewHolder();
+
+            //View objects of custom_row.xml are referenced
+            holder.tvName =(TextView)convertView.findViewById(R.id.tvName);
+            holder.tvAuth =(TextView)convertView.findViewById(R.id.tvAuth);
+            holder.tvPub =(TextView)convertView.findViewById(R.id.tvPub);
+            holder.imView = (ImageView)convertView.findViewById(R.id.imView);
+
+            convertView.setTag(holder);
+
         }
-
-        //View objects of custom_row.xml are referenced
-
-        holder.tvName =(TextView)convertView.findViewById(R.id.tvName);
-       holder.tvAuth =(TextView)convertView.findViewById(R.id.tvAuth);
-       holder.tvPub =(TextView)convertView.findViewById(R.id.tvPub);
-       holder.imView = (ImageView)convertView.findViewById(R.id.imView);
-
+        else{holder = (ViewHolder) convertView.getTag();}
 
         //Setting value to these view objects
 
@@ -100,8 +96,6 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
         holder.tvAuth.setText("Author: "+ filteredBooks.get(position).getAuthor());
         holder.tvPub.setText("Publisher: "+filteredBooks.get(position).getPublisher());
         holder.imView.setImageResource(filteredBooks.get(position).getImages());
-
-
 
         return convertView;
 
@@ -123,7 +117,7 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
             if ( constraint != null && constraint.length() > 0) {
 
 
-               //Splitting the search query(constraint) so that searching is done word by word
+                //Splitting the search query(constraint) so that searching is done word by word
                 final String[] words= constraint.toString().toLowerCase().split(" ");
                 final int length = words.length;
 
@@ -133,6 +127,7 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
                 //implementing search algorithm
 
                 //the name results first
+
                 for (int i = 0; i < unfilteredBooks.size(); i++) {
 
                     for (String word : words)
@@ -141,20 +136,15 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
                             Book b = new Book(unfilteredBooks.get(i).getNames(), unfilteredBooks.get(i).getAuthor(), unfilteredBooks.get(i).getPublisher(),
                                     unfilteredBooks.get(i).getImages(),unfilteredBooks.get(i).getUrl());
                             filtered.add(b);
-
-                            //An attempt to highlight
-
-//                           try{ SpannableString s = spanner(word,i);
-//                            TextView n =(TextView)lv.findViewById(R.id.tvName);
-//                            n.setText(s);}catch (Exception e){
-//                               System.out.println(e);
-//                           }
                             break;
 
-
                         }
+
+
                 }
+
                 //then the authors
+
                 for (int i = 0; i < unfilteredBooks.size(); i++) {
 
                     for (String word : words)
@@ -163,6 +153,7 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
                                     unfilteredBooks.get(i).getPublisher(), unfilteredBooks.get(i).getImages(),
                                     unfilteredBooks.get(i).getUrl());
                             filtered.add(b);
+
                             break;
                         }
                 }
@@ -174,6 +165,7 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
                                     unfilteredBooks.get(i).getPublisher(), unfilteredBooks.get(i).getImages()
                                     ,unfilteredBooks.get(i).getUrl());
                             filtered.add(b);
+
                             break;
                         }
 
@@ -195,7 +187,7 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
 
             //to show the no. of results
             if(unfilteredBooks.size()!=filteredBooks.size())
-            tvResults.setText("Found "+ filteredBooks.size()+" results");
+                tvResults.setText("Found "+ filteredBooks.size()+" results");
             else{tvResults.setText("Result");}
 
             notifyDataSetChanged();
@@ -214,15 +206,7 @@ public class CustomAdapter extends BaseAdapter implements Filterable{
             });
         }
 
-         //The function to make highlighting in the name field possible
-//        public SpannableString spanner(CharSequence constraint, int position){
-//            SpannableString s = new SpannableString(filteredBooks.get(position).getNames());
-//            s.setSpan(new ForegroundColorSpan(Color.YELLOW),filteredBooks.get(position).getNames().indexOf(constraint.toString()),
-//                    filteredBooks.get(position).getNames().indexOf(constraint.toString())+constraint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//            return s;
-//        }
-   }
+    }
 
     //keyboard hiding method
     public static void hideKeyboardFrom(Context context, View view) {
