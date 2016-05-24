@@ -9,3 +9,9 @@ On clicking a list item the corresponding amazon shopping page opens where user 
 
 # How the search algorithm is implemented?
 To the search box which is an edittext, a textwatcher method has been attached. Whenever the text changes the filter is called via the custom adapter. In the filter we have two methods, one to perform filtering and other to publish results. The search query is first broken down into a set of words and then matching is done with the name, author and publisher (in this same respective order) with each of those words (that's how partial search is implemented, the user does not need to type the exact query!)
+
+#Fundamental Concepts Involved
+i)ListViews
+ii) Custom Adapters
+iii) Filterable Interface
+iv) WebViews
